@@ -1,29 +1,19 @@
-import json
 from abc import abstractmethod
 
+from dataclasses import dataclass
 
+
+@dataclass
 class Queue:
-    def __init__(self, name, max_priority=-1) -> None:
-        self.name = name
-        self.max_priority = max_priority
+    name: str
+    max_priority: int = -1
+    max_length: int = -1
 
 
+@dataclass
 class Message:
-    def __init__(self, payload, priority=None) -> None:
-        super().__init__()
-        self.payload = payload
-        self.priority = priority
-
-    def to_json(self):
-        return json.dumps({
-            'payload': json.dumps(self.payload),
-            'priority': self.priority
-        })
-
-    @staticmethod
-    def from_json(json_data):
-        data = json.loads(json_data)
-        return Message(data.get('payload'), data.get('payload'))
+    payload: object
+    priority: int = None
 
 
 class Bus:
@@ -40,7 +30,3 @@ class Handler:
     @abstractmethod
     def handle(self, message: Message, bus: Bus):
         pass
-
-
-
-

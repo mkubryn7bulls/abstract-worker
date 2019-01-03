@@ -1,6 +1,11 @@
+import logging
+import pickle
+
 import pika
 
 from bus.api import Bus, Handler, Message, Queue
+
+logger = logging.getLogger(__name__)
 
 
 class RmqBus(Bus):
@@ -17,7 +22,7 @@ class RmqBus(Bus):
                                    body=self._serialize_msg(msg))
 
     def subscribe(self, queue: Queue, handler: Handler):
-        print("Registered handler %s on queue %s (max_priority=%s)" % (handler, queue.name, queue.max_priority))
+        logger.debug("Subscribed handler %s on %s" % (handler, queue))
 
         def internal_handle(ch, method, properties, body):
             handler.handle(self._deserialize_msg(body), self)
@@ -28,18 +33,21 @@ class RmqBus(Bus):
                                    no_ack=True)
 
     def _ensure_queue(self, queue: Queue):
-        args = None
+        args = {}
         if queue.max_priority > 0:
-            args = {'x-max-priority': queue.max_priority}
-        self.channel.queue_declare(queue=queue.name, arguments=args)
+            args['x-max-priority'] = queue.max_priority
+        if queue.max_length > 0:
+            args['x-max-length'] = queue.max_length
+
+        self.channel.queue_declare(queue=queue.name, arguments=args if args else None)
 
     @staticmethod
     def _serialize_msg(msg: Message) -> str:
-        return msg.to_json()
+        return pickle.dumps(msg)
 
     @staticmethod
     def _deserialize_msg(serialized) -> Message:
-        return Message.from_json(serialized)
+        return pickle.loads(serialized)
 
     def start_consuming(self):
         self.channel.start_consuming()

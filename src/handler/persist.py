@@ -1,8 +1,11 @@
+import logging
 from abc import abstractmethod
 from time import sleep
 
 from bus import queues
 from bus.api import Bus, Handler, Message
+
+logger = logging.getLogger(__name__)
 
 
 class SimplePersistingHandler(Handler):
@@ -23,5 +26,5 @@ class PersisterHandler(Handler):
 
     @staticmethod
     def persist(data):
-        print('Persisting', data)
+        logger.info('Persisting %s', data)
         sleep(2)

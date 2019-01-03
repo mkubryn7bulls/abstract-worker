@@ -5,6 +5,14 @@ services:
     image: rabbitmq:3
     hostname: dr-rabbit
 
+  worker_scheduler:
+      image: deepreach/worker
+      deploy:
+          replicas: 1
+      environment:
+        mq_host: 'mq'
+      command: "python -u /app/scheduler.py"
+
   worker_persister:
       image: deepreach/worker
       build: .
@@ -22,11 +30,11 @@ services:
         mq_host: 'mq'
       command: "python -u /app/worker.py lighthouse"
 
-  worker_scheduler:
+  worker_serp:
       image: deepreach/worker
       deploy:
-          replicas: 1
+          replicas: 3
       environment:
         mq_host: 'mq'
-      command: "python -u /app/scheduler.py"
+      command: "python -u /app/worker.py lighthouse"
 
