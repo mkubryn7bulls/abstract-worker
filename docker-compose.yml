@@ -1,0 +1,32 @@
+version: "3.3"
+
+services:
+  mq:
+    image: rabbitmq:3
+    hostname: dr-rabbit
+
+  worker_persister:
+      image: deepreach/worker
+      build: .
+      deploy:
+          replicas: 1
+      environment:
+        mq_host: 'mq'
+      command: "python -u /app/worker.py persister"
+
+  worker_lighthouse:
+      image: deepreach/worker
+      deploy:
+          replicas: 3
+      environment:
+        mq_host: 'mq'
+      command: "python -u /app/worker.py lighthouse"
+
+  worker_scheduler:
+      image: deepreach/worker
+      deploy:
+          replicas: 1
+      environment:
+        mq_host: 'mq'
+      command: "python -u /app/scheduler.py"
+
