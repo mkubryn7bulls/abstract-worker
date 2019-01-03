@@ -1,10 +1,6 @@
-# Setup
-Run RabbitMQ broker
-
-    docker run -d --hostname my-rabbit --name some-rabbit rabbitmq:3
+Simple worker based on event bus
 
 # Running
-## Scheduler
-TBD
-## Worker
-TBD
+On a Docker swarm cluster:
+
+    docker stack deploy --compose-file docker-compose.yml absta-worker
