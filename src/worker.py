@@ -12,9 +12,9 @@ HANDLERS = {
     'lighthouse': [(queues.QUEUE_LIGHTHOUSE_COMPUTE, LighthouseCalculateScoreHandler())],
     'persister': [(queues.QUEUE_PERSIST, PersisterHandler())],
     'serp': [
-        (queues.SERP_CREATE_TASKS, SerpCreateTasks()),
-        (queues.SERP_COLLECT_FINISHED_TASKS, SerpCollectFinishedTasksHandler()),
-        (queues.SERP_COLLECT_RESULTS, SerpCollectTaskResults()),
+        (queues.SERP_REQUESTS, SerpCreateTasks()),
+        (queues.SERP_DFS_COLLECT_FINISHED_TASKS, SerpCollectFinishedTasksHandler()),
+        (queues.SERP_DFS_COLLECT_TASK_RESULTS, SerpCollectTaskResults()),
     ],
 }
 

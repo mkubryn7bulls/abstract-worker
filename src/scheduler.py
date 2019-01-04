@@ -10,7 +10,7 @@ bus = RmqBus(os.getenv('mq_host', 'localhost'))
 
 
 def main():
-    bus.send(queues.SERP_CREATE_TASKS, Message([
+    bus.send(queues.SERP_REQUESTS, Message([
         SerpRequest('restauracja wegańska', 'Warsaw,Masovian Voivodeship,Poland'),
         SerpRequest('restauracja grochów', 'Warsaw,Masovian Voivodeship,Poland'),
         SerpRequest('restauracja dla wegan', 'Warsaw,Masovian Voivodeship,Poland'),
@@ -20,7 +20,7 @@ def main():
         # bus.send(queues.QUEUE_LIGHTHOUSE_COMPUTE, Message('https://google.com'))
         # bus.send(queues.QUEUE_LIGHTHOUSE_COMPUTE, Message('https://facebook.com'))
         # bus.send(queues.QUEUE_LIGHTHOUSE_COMPUTE, Message('https://linkedin.com'))
-        bus.send(queues.SERP_COLLECT_FINISHED_TASKS, Message(None)),
+        bus.send(queues.SERP_DFS_COLLECT_FINISHED_TASKS, Message(None)),
         print("Messages sent")
         sleep(10)
 

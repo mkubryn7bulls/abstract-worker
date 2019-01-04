@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class SimplePersistingHandler(Handler):
 
     @abstractmethod
-    def prepare_data_to_persist(self, payload):
+    def prepare_data_to_persist(self, payload) -> object:
         pass
 
     def handle(self, message: Message, bus: Bus):
